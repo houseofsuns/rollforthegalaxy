@@ -2903,30 +2903,6 @@ class RollForTheGalaxy extends Table
             $this->gamestate->nextState( 'settle' );
     }
 
-    // Debug: add this card to player tableau
-    function ac( $card_type_id )
-    {
-        $player_id = self::getCurrentPlayerId();
-
-        $sql = "INSERT INTO tile (card_type, card_type_arg, card_location, card_location_arg) VALUES
-                    ('$card_type_id','0','tableau','$player_id')";
-        self::DbQuery( $sql );
-        $tile_id = self::DbGetLastId();
-
-
-
-        self::notifyAllPlayers( 'debug_ac', '', array(
-            'tile' => $this->tiles->getCard( $tile_id )
-        ) );
-    }
-
-    function debugeffect( $card_id )
-    {
-        $card = $this->tiles->getCard( $card_id );
-
-        self::applyEffect( self::getCurrentPlayerId(), $card['type'], $card_id );
-    }
-
     function applyEffect( $player_id, $tile_type_id, $tile_id, $last_die_used = null, $bSkipInteractives=false, $bInitialEffect=false )
     {
         $tile_type = $this->tiles_types[ $tile_type_id ];
@@ -4102,5 +4078,66 @@ class RollForTheGalaxy extends Table
 //
 
 
+    }
+
+
+///////////////////////////////////////////////////////////////////////////////////:
+////////// DEBUG functions
+//////////
+
+    // Debug: add this card to player construction zone
+    function ac( $card_type_id )
+    {
+        $player_id = self::getCurrentPlayerId();
+
+
+
+        $side = $this->tiles_types[ $card_type_id ]['category'];
+        $target_location = ( $side == 'dev' ) ? 'bd'.$player_id :'bw'.$player_id;
+
+        $sql = "SELECT MAX(card_location_arg) FROM tile WHERE card_location='$target_location'";
+        $top = self::getUniqueValueFromDB( $sql );
+        $above = ( $top == null ) ? 0 : ($top + 2);
+        $sql = "INSERT INTO tile (card_type, card_type_arg, card_location, card_location_arg) VALUES
+                    ('$card_type_id', '0', '$target_location', '$above')";
+        self::DbQuery( $sql );
+        $tile_id = self::DbGetLastId();
+
+        self::notifyAllPlayers( 'debug_ac', '', array(
+            'tile' => $this->tiles->getCard( $tile_id ),
+            'side' => $side,
+        ) );
+    }
+
+    function debug_ac(int $card_type_id) {
+        $this->ac($card_type_id);
+    }
+
+    // Debug: add this card to player tableau
+    function act( $card_type_id )
+    {
+        $player_id = self::getCurrentPlayerId();
+
+        $sql = "INSERT INTO tile (card_type, card_type_arg, card_location, card_location_arg) VALUES
+                    ('$card_type_id','0','tableau','$player_id')";
+        self::DbQuery( $sql );
+        $tile_id = self::DbGetLastId();
+
+
+
+        self::notifyAllPlayers( 'debug_act', '', array(
+            'tile' => $this->tiles->getCard( $tile_id )
+        ) );
+    }
+
+    function debug_act(int $card_type_id) {
+        $this->act($card_type_id);
+    }
+
+    function debug_effect(int $card_id )
+    {
+        $card = $this->tiles->getCard( $card_id );
+
+        self::applyEffect( self::getCurrentPlayerId(), $card['type'], $card_id );
     }
 }

@@ -238,17 +238,6 @@
         self::ajaxResponse( );
   	}
 
-    // TODO: debug only, to be removed
-
-    function debugeffect()
-    {
-        self::setAjaxMode();
-        $card_id = self::getArg( "id", AT_posint, true );
-  	    $this->game->debugeffect( $card_id );
-        self::ajaxResponse( );
-
-    }
-
     function advancedlogistics()
     {
         self::setAjaxMode();

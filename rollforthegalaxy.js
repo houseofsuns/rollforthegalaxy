@@ -2171,6 +2171,7 @@ function (dojo, declare) {
 
             dojo.subscribe( 'newdie', this, 'notif_newdie' );
             dojo.subscribe( 'debug_ac', this, 'notif_debug_ac' );
+            dojo.subscribe( 'debug_act', this, 'notif_debug_act' );
 
             dojo.subscribe( 'removedie', this, 'notif_removedie' );
             dojo.subscribe( 'recall', this, 'notif_recall' );
@@ -2848,6 +2849,22 @@ function (dojo, declare) {
 
         notif_debug_ac: function( notif )
         {
+            console.log('debug_ac: ' + notif.args.tile)
+            if( notif.args.side == 'dev' )
+            {
+                this.playerDevInBuilt[ this.player_id ].addToStockWithId( notif.args.tile.type, notif.args.tile.id);
+                $('dev_in_built_counter_'+this.player_id).innerHTML = toint( $('dev_in_built_counter_'+this.player_id).innerHTML ) +1;
+            }
+            else if( notif.args.side == 'world' )
+            {
+                this.playerWorldInBuilt[ this.player_id ].addToStockWithId( notif.args.tile.type, notif.args.tile.id);
+                $('world_in_built_counter_'+this.player_id).innerHTML = toint( $('world_in_built_counter_'+this.player_id).innerHTML ) +1;
+            }
+        },
+
+        notif_debug_act: function( notif )
+        {
+            console.log('debug_act: ' + notif.args.tile)
             this.playerTableau[ notif.args.tile.location_arg ].addToStockWithId( notif.args.tile.type, notif.args.tile.id );
         }
 

@@ -10,25 +10,25 @@
 
 */
 
-$gameinfos = array( 
+$gameinfos = array(
 
-// Name of the game in English (will serve as the basis for translation) 
+// Name of the game in English (will serve as the basis for translation)
 'game_name' => "Roll for the Galaxy",
 
 // Game designer (or game designers, separated by commas)
-'designer' => 'Wei-Hwa Huang, Thomas Lehmann',       
+'designer' => 'Wei-Hwa Huang, Thomas Lehmann',
 
 // Game artist (or game artists, separated by commas)
-'artist' => 'Martin Hoffmann, Claus Stephan, Mirko Suzuki',         
+'artist' => 'Martin Hoffmann, Claus Stephan, Mirko Suzuki',
 
 // Year of FIRST publication of this game. Can be negative.
-'year' => 2014,                 
+'year' => 2014,
 
 // Game publisher
-'publisher' => 'Rio Grande Games',                     
+'publisher' => 'Rio Grande Games',
 
 // Url of game publisher website
-'publisher_website' => 'http://riograndegames.com//',   
+'publisher_website' => 'http://riograndegames.com//',
 
 // Board Game Geek ID of the publisher
 'publisher_bgg_id' => 3,
@@ -38,7 +38,7 @@ $gameinfos = array(
 
 
 // Players configuration that can be played (ex: 2 to 4 players)
-'players' => array( 2,3,4, 5 ),    
+'players' => array( 2,3,4, 5 ),
 
 // Suggest players to play with this number of players. Must be null if there is no such advice, or if there is only one possible player configuration.
 'suggest_player_number' => null,
@@ -49,16 +49,16 @@ $gameinfos = array(
 
 
 // Estimated game duration, in minutes (used only for the launch, afterward the real duration is computed)
-'estimated_duration' => 30,           
+'estimated_duration' => 30,
 
 // Time in second add to a player when "giveExtraTime" is called (speed profile = fast)
-'fast_additional_time' => 30,           
+'fast_additional_time' => 30,
 
 // Time in second add to a player when "giveExtraTime" is called (speed profile = medium)
-'medium_additional_time' => 40,           
+'medium_additional_time' => 40,
 
 // Time in second add to a player when "giveExtraTime" is called (speed profile = slow)
-'slow_additional_time' => 50,           
+'slow_additional_time' => 50,
 
 // If you are using a tie breaker in your game (using "player_score_aux"), you must describe here
 // the formula used to compute "player_score_aux". This description will be used as a tooltip to explain
@@ -69,23 +69,23 @@ $gameinfos = array(
 'tie_breaker_description' => "Number of dice in cup + Galactic Credits",
 
 // Game is "beta". A game MUST set is_beta=1 when published on BGA for the first time, and must remains like this until all bugs are fixed.
-'is_beta' => 1,                     
+'is_beta' => 1,
 
 // Is this game cooperative (all players wins together or loose together)
-'is_coop' => 0, 
+'is_coop' => 0,
 
 
 // Complexity of the game, from 0 (extremely simple) to 5 (extremely complex)
-'complexity' => 2,    
+'complexity' => 2,
 
 // Luck of the game, from 0 (absolutely no luck in this game) to 5 (totally luck driven)
-'luck' => 3,    
+'luck' => 3,
 
 // Strategy of the game, from 0 (no strategy can be setup) to 5 (totally based on strategy)
-'strategy' => 4,    
+'strategy' => 4,
 
 // Diplomacy of the game, from 0 (no interaction in this game) to 5 (totally based on interaction and discussion between players)
-'diplomacy' => 2,    
+'diplomacy' => 2,
 
 // Colors attributed to players
 'player_colors' => array( "ff0000", "008000", "0000ff", "ffa500", "773300" ),
@@ -124,9 +124,9 @@ $gameinfos = array(
     totranslate("Roll for the Galaxy is a dice game of building space empires. Your dice represent your populace, whom you direct to develop new technologies, settle worlds, and ship goods."),
     totranslate("The player who best manages his workers and builds the most prosperous empire wins!"),
     totranslate("This dice version of Race for the Galaxy takes players on a new journey through the Galaxy, but with the the feel of the original game."),
-  ),  
-   
-  
+  ),
+
+
 
 //////// BGA SANDBOX ONLY PARAMETERS (DO NOT MODIFY)
 

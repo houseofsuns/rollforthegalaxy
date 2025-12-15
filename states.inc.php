@@ -7,7 +7,7 @@
  * This code has been produced on the BGA studio platform for use on http://boardgamearena.com.
  * See http://en.boardgamearena.com/#!doc/Studio for more information.
  * -----
- * 
+ *
  * states.inc.php
  *
  * RollForTheGalaxy game states description
@@ -49,7 +49,7 @@
 
 //    !! It is not a good idea to modify this file when a game is running !!
 
- 
+
 $machinestates = array(
 
     // The initial state. Please do not modify.
@@ -60,8 +60,8 @@ $machinestates = array(
         "action" => "stGameSetup",
         "transitions" => array( "" => 2 )
     ),
-    
-    // Game initialization 
+
+    // Game initialization
 
     2 => array(
     		"name" => "startingWorldCombination",
@@ -72,7 +72,7 @@ $machinestates = array(
     		"possibleactions" => array( "startingWorldCombination" ),
     		"transitions" => array( "startingWorldCombination" => 10, "zombiePass" => 10 )
     ),
-    
+
 
     // Turn start
 
@@ -82,7 +82,7 @@ $machinestates = array(
     		"descriptionmyturn" => clienttranslate('Dice are rolled...'),
     		"type" => "game",
     		"action" => "stRoll",
-            "updateGameProgression" => true,   
+            "updateGameProgression" => true,
     		"transitions" => array( "newTurn" => 11 )
     ),
     11 => array(
@@ -113,7 +113,7 @@ $machinestates = array(
     		"action" => "stStartExplore",
     		"transitions" => array( "startPhase" => 21, "skipPhase" => 30 )
     ),
-    
+
     21 => array(
     		"name" => "explore",
     		"description" => clienttranslate('Explore: Everyone must scout or stock'),
@@ -147,7 +147,7 @@ $machinestates = array(
     		"action" => "stEndExplore",
     		"transitions" => array( "endPhase" => 30, "alien_research" => 25 )
     ),
-    
+
 
     // Develop
 
@@ -159,12 +159,12 @@ $machinestates = array(
     		"action" => "stStartDevelop",
     		"possibleactions" => array( "chooseDiceForConstr" ),
     		"transitions" => array( "skipPhase" => 40, 'endPhase' => 39, "zombiePass" => 39,
-    		
+
     		    "removedie" => 1001,
     		    'back_dice_on_dev' => 1002
     		 )
     ),
-        
+
     39 => array(
     		"name" => "endDevelop",
     		"description" => '',
@@ -187,7 +187,7 @@ $machinestates = array(
 
     		    "removedie" => 1001,
     		    'back_dice_on_settle' => 1004
-    		
+
     		)
     ),
 
@@ -209,7 +209,7 @@ $machinestates = array(
     		"action" => "stStartProduce",
     		"transitions" => array( "startPhase" => 51, "skipPhase" => 60 )
     ),
-    
+
     51 => array(
     		"name" => "produce",
     		"description" => clienttranslate('Produce: Everyone must choose which worlds produce resources'),
@@ -226,7 +226,7 @@ $machinestates = array(
     		"action" => "stEndProduce",
     		"transitions" => array( "endPhase" => 60 )
     ),
-    
+
     // Ship
 
     60 => array(
@@ -236,7 +236,7 @@ $machinestates = array(
     		"action" => "stStartShip",
     		"transitions" => array( "startPhase" => 61, "skipPhase" => 100, "no_action_on_phase" => 69, "zombiePass" => 69 )
     ),
-    
+
     61 => array(
     		"name" => "ship",
     		"description" => clienttranslate('Ship: Everyone must trade or consume resources'),
@@ -253,9 +253,9 @@ $machinestates = array(
     		"action" => "stEndShip",
     		"transitions" => array( "endPhase" => 100 )
     ),
-    
 
-    
+
+
     // Manage empire (end of turn)
 
     100 => array(
@@ -265,7 +265,7 @@ $machinestates = array(
     		"action" => "stStartManage",
     		"transitions" => array( "startPhase" => 101, "skipPhase" => 110 )
     ),
-    
+
     101 => array(
     		"name" => "manage",
     		"description" => clienttranslate('Manage Empire: Everyone must recruit or recall workers'),
@@ -274,7 +274,7 @@ $machinestates = array(
     		"possibleactions" => array( "recruit", "recall" ),
     		"transitions" => array( "no_more_actions" => 110,  "zombiePass" => 110 )
     ),
-    
+
 
 
     110 => array(
@@ -285,13 +285,13 @@ $machinestates = array(
     		"transitions" => array( "nextTurn" => 10, "endGame" => 99 )
     ),
 
-        
-    
+
+
     // Main phase
-    
+
 /*
         TILES EFFECTS
-*/   
+*/
 
     1000 => array(
     		"name" => "endEffect",
@@ -351,8 +351,8 @@ $machinestates = array(
 
 
 
- 
-   
+
+
     // Final state.
     // Please do not modify.
     99 => array(
@@ -364,6 +364,3 @@ $machinestates = array(
     )
 
 );
-
-
-

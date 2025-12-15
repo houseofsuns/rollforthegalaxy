@@ -1,0 +1,588 @@
+/**
+ *------
+ * BGA framework: © Gregory Isabelli <gisabelli@boardgamearena.com> & Emmanuel Colin <ecolin@boardgamearena.com>
+ * RollForTheGalaxy implementation : © <Your name here> <Your email address here>
+ *
+ * This code has been produced on the BGA studio platform for use on http://boardgamearena.com.
+ * See http://en.boardgamearena.com/#!doc/Studio for more information.
+ * -----
+ *
+ * rollforthegalaxy.css
+ *
+ * RollForTheGalaxy stylesheet
+ *
+ */
+
+/*
+    This is the CSS stylesheet of your game User Interface.
+    
+    Styles defined on this file will be applied to the HTML elements you define in your
+    HTML template (rollforthegalaxy_rollforthegalaxy.tpl), and to HTML elements you create dynamically
+    (in rollforthegalaxy.js).
+    
+    Usually, you are using CSS to:
+    
+    1°) define the overall layout of your game
+        (ex: place the board on the top left, place player's hand beside, place the deck on the right, ...).
+
+    2°) create your CSS-sprites:
+        All images of your games should be gathered into a small number of image files. Then, using
+        background-image and background-position CSS properties, you create HTML blocks that can 
+        display these images correctly (see example below).
+    
+    3°) ... anything else:
+        It is really easy to add and remove CSS classes dynamically from your Javascript with
+        dojo.addClass and dojo.removeClass. It is also easy to check if an element has a class
+        (dojo.hasClass) or to get all elements with a specific class (dojo.query). This is why,
+        very often, using CSS classes for the logic of your user interface allow you to do complex
+        thing easily.
+        
+        
+     Note: on the production platform, this file will be compressed and comments will be removed.
+           Consequently, don't hesitate to put as many comments as necessary.
+*/
+
+@import url(../../../css/csslayer.css); /* Note: you must not use any @import directive other than this one */
+
+
+/*********** BOARD *****************************/
+
+.player_board {
+    position: relative;
+    height: 239px;
+    width: 700px;
+    background-image: url('img/board.jpg');
+    margin-bottom: 10px;
+    float: left;
+    border-radius: 10px;
+    box-shadow: 3px 3px 3pt 1pt black;
+}
+
+.credit_space {
+    width: 40px;
+    height: 30px;
+    position: absolute;
+    left: 12px;
+    top: 195px;
+}
+.credit_space0 {    left: 12px; }
+.credit_space1 {    left: 70px; }
+.credit_space2 {    left: 130px; }
+.credit_space3 {    left: 195px; }
+.credit_space4 {    left: 257px; }
+.credit_space5 {    left: 321px; }
+.credit_space6 {    left: 385px; }
+.credit_space7 {    left: 449px; }
+.credit_space8 {    left: 513px; }
+.credit_space9 {    left: 577px; }
+.credit_space10 {    left: 640px; }
+
+.credit_selector {
+    width: 64px;
+    height: 49px;
+    left: 58px;
+    top: 185px;
+    position: absolute;
+    background-image: url('img/icons.png');
+
+}
+
+.dev_in_built_zone {
+    position: absolute;
+    width: 160px;
+    height: 160px;
+    top: 9px;
+    left: 330px;
+}
+
+.dev_in_built, .dev_dice {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 160px;
+    height: 160px;
+}
+.dev_dice {
+    top: 73px;
+    height: 120px;
+    z-index: 50;
+}
+
+.world_in_built_zone {
+    position: absolute;
+    width: 160px;
+    height: 160px;
+    top: 9px;
+    left: 524px;
+}
+
+.world_in_built, .world_dice {
+    position: absolute;
+    width: 160px;
+    height: 160px;
+    top: 0px;
+    left: 0px;
+}
+.world_dice {
+    top: 73px;
+    height: 110px;
+    z-index: 50;
+    left:2px;
+}
+
+.dev_in_built_zone_counter,
+.world_in_built_zone_counter {
+    position: absolute;
+    color: black;
+    font-weight: bold;
+    font-size: 14px;
+    bottom: -15px;
+    right: -15px;
+}
+
+.reorder_content {
+    position: absolute;
+    top: 26px;
+    left: 41px;
+    display: none;
+}
+.gamestate_explore .tableau_with_al .reorder_content {
+    display: block;
+}
+
+.dev_in_built, .world_in_built   { width: 190px;   }
+
+.citizenry {
+    width: 140px;
+    height: 150px;
+    position: absolute;
+    top: 19px;
+    left: 156px;
+}
+.cup {
+    width: 50px;
+    height: 160px;
+    position: absolute;
+    top: 9px;
+    left: 2px;
+
+}
+
+/*************** TILE ***********************/
+
+.roll_tile {
+    box-shadow: 3px 3px 3pt 1pt black;
+    border-radius: 10px;
+}
+.faction_right_tile {
+    margin-left: -10px;
+    z-index:2;
+    border-radius: 0px 10px 10px 0px;
+}
+.faction_left_tile {
+    border-radius: 10px 0px 0px 10px;
+}
+
+.roll_tile.reassign_available
+{
+    border: 4px #00AF00 solid;
+}
+
+.tile_title {
+    width: 75%;
+    margin-left: 25%;
+    text-align: center;
+    letter-spacing: 0px;
+    font-size: 55%;
+    font-weight: bold;
+    margin-top: 3px;
+    text-transform: uppercase;
+}
+
+.resourcezone {
+    position: absolute;
+    top: 50px;
+    left: 50px;
+    width: 50px;
+    height: 50px;
+}
+
+.card_remove {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    background-image: url('img/cardcross.png');
+    display: none;
+}
+
+.to_be_removed .card_remove {
+    display: block;
+}
+
+/*********** DICE TABLE ************************/
+
+.dicetable {
+    width: 250px;
+    float: left;
+    margin-right: 10px;
+}
+
+.dicerow {
+    width: 50px;
+    float: left;    
+    cursor: pointer;
+    padding-bottom: 50px;
+    position: relative;
+}
+.dicerow_content .stockitem {
+    z-index:1;
+}
+.dicerow_header_placeholder .stockitem {
+    z-index:1;
+}
+
+.dicerow_background {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+}
+.dicerow_background:hover {
+    background-color: rgba( 200,200,200, 0.7 );
+}
+.dicerow_header_placeholder {
+    height: 50px;
+    width: 50px;
+    position: relative;
+}
+.dicerow_header {
+    position: absolute;
+    z-index:1;
+    top: 0px;
+    left: 0px;
+    height: 50px;
+    width: 50px;
+    background-image: url('img/tiles.jpg');
+    background-size: 500px 800px;   /* 50px x 10 / 50px x 16 */
+    background-position: -300% -1200%;
+}
+.dicerow_header:hover {
+    -webkit-filter: brightness(200%); /* Safari */
+    filter: brightness(200%);
+}
+.dicerow_header_2 { background-position: -800% -1200%;  }
+.dicerow_header_3 { background-position: -700% -1200%;  }
+.dicerow_header_4 { background-position: -600% -1200%;  }
+.dicerow_header_5 { background-position: -900% -1200%;  }
+
+
+.dicerow_header_1.phase_not_selected { background-position: -300% -500%;  }
+.dicerow_header_2.phase_not_selected { background-position: -800% -500%;  }
+.dicerow_header_3.phase_not_selected { background-position: -700% -500%;  }
+.dicerow_header_4.phase_not_selected { background-position: -600% -500%;  }
+.dicerow_header_5.phase_not_selected { background-position: -900% -500%;  }
+
+
+
+.dicerow_content {
+}
+
+.dicerow_content .stockitem_selected,
+.dicerow_header_placeholder .stockitem_selected {
+    border-radius: 5px;
+    margin-top: -2px;
+    margin-left: -2px;
+    z-index: 20;
+}
+
+/************* PLAYER TABLEAU **********************************/
+
+.tableau_panel .tableau_name {
+    position: relative;
+    top: -5px;
+}
+
+
+
+.tableau {
+    margin-top: 10px;
+}
+
+.scout_panel {
+    display: none;
+}
+
+
+
+
+.vp_icon {
+    
+}
+
+.die_face_tooltip {
+    width: 50px;
+    height: 50px;
+    background-image: url( 'img/dice.png' );
+    background-size: 350px 350px;   /* 7*50 / 7*50 */
+    display: inline-block;
+    margin: 5px;
+}
+
+
+/*******************************************************************************************************/
+
+@keyframes spin {
+    0% { transform: translateZ(-100px) rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
+    16% { transform: translateZ(-100px) rotateX(180deg) rotateY(180deg) rotateZ(0deg); }
+    33% { transform: translateZ(-100px) rotateX(360deg) rotateY(90deg) rotateZ(180deg); }
+    50% { transform: translateZ(-100px) rotateX(360deg) rotateY(360deg) rotateZ(360deg); }
+    66% { transform: translateZ(-100px) rotateX(180deg) rotateY(360deg) rotateZ(270deg); }
+    83% { transform: translateZ(-100px) rotateX(270deg) rotateY(180deg) rotateZ(180deg); }
+    100% { transform: translateZ(-100px) rotateX(360deg) rotateY(360deg) rotateZ(360deg); }
+}
+@keyframes spin-duplicate {
+    0% { transform: translateZ(-100px) rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
+    16% { transform: translateZ(-100px) rotateX(180deg) rotateY(180deg) rotateZ(0deg); }
+    33% { transform: translateZ(-100px) rotateX(360deg) rotateY(90deg) rotateZ(180deg); }
+    50% { transform: translateZ(-100px) rotateX(360deg) rotateY(360deg) rotateZ(360deg); }
+    66% { transform: translateZ(-100px) rotateX(180deg) rotateY(360deg) rotateZ(270deg); }
+    83% { transform: translateZ(-100px) rotateX(270deg) rotateY(180deg) rotateZ(180deg); }
+    100% { transform: translateZ(-100px) rotateX(360deg) rotateY(360deg) rotateZ(360deg); }
+}
+@keyframes roll {
+    0% { transform: translate3d(-100px,-50px,-200px) }
+    12% { transform: translate3d(0px,0,-100px) }
+    25% { transform: translate3d(100px,-50px,-200px) }
+    37% { transform: translate3d(0px,-100px,-400px) }
+    50% { transform: translate3d(-100px,-50px,-200px) }
+    62% { transform: translate3d(0px,0,-500px) }
+    75% { transform: translate3d(100px,-50px,-200px) }
+    87% { transform: translate3d(0px,-100px,-400px) }
+    100% { transform: translate3d(-100px,-50px,-200px) }
+}
+
+.bgadie_platform.roll > .bgadie_dice {
+    animation: spin-duplicate 1.5s infinite linear;
+}
+.bgadie_platform.roll {
+    transform-style: preserve-3d;
+    animation: roll 0.75s infinite linear;
+}
+
+
+.bgadie_wrapper {
+}
+
+
+.bgadie_dice.value1 { transform: translateZ(-100px) rotateX(-10deg) rotateY(5deg) rotateZ(0deg);  }
+.bgadie_dice.value2 { transform: translateZ(-100px) rotateX(260deg) rotateY(0deg) rotateZ(5deg); }
+.bgadie_dice.value3 {  transform: translateZ(-100px) rotateX(-10deg) rotateY(95deg) rotateZ(180deg); }
+.bgadie_dice.value4 {  transform: translateZ(-100px) rotateX(170deg) rotateY(265deg) rotateZ(360deg); }
+.bgadie_dice.value5 {  transform: translateZ(-100px) rotateX(260deg) rotateY(180deg) rotateZ(175deg); }
+.bgadie_dice.value6 {  transform: translateZ(-100px) rotateX(170deg) rotateY(-5deg) rotateZ(270deg); }
+
+
+
+
+.bgadie_wrapper {
+    margin: 0 auto;
+    perspective: 1200px;
+    position:relative;
+}
+.bgadie_platform {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    transform: scale3d(0.5, 0.5, 0.5);
+}
+.bgadie_dice {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    transform-style: preserve-3d;
+   transform: translateZ(-100px) rotateX(-10deg) rotateY(5deg) rotateZ(0deg);
+}
+.side {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    background: #fff;
+    box-shadow:inset 0 0 40px #ccc;
+    border-radius: 40px;
+}
+.bgadie_dice .cover, .bgadie_dice .inner {
+    background: #e0e0e0;
+    box-shadow: none;
+}
+.bgadie_dice .cover {
+    border-radius: 0;
+    transform: translateZ(0px);
+}
+.bgadie_dice .cover.x {
+    transform: rotateY(90deg);
+}
+.bgadie_dice .cover.z {
+    transform: rotateX(90deg);
+}
+.bgadie_dice .front  {
+    transform: translateZ(100px);
+}
+.bgadie_dice .front.inner  {
+    transform: translateZ(98px);
+}
+.bgadie_dice .back {
+    transform: rotateX(-180deg) translateZ(100px);
+}
+.bgadie_dice .back.inner {
+    transform: rotateX(-180deg) translateZ(98px);
+}
+.bgadie_dice .right {
+    transform: rotateY(90deg) translateZ(100px);
+}
+.bgadie_dice .right.inner {
+    transform: rotateY(90deg) translateZ(98px);
+}
+.bgadie_dice .left {
+    transform: rotateY(-90deg) translateZ(100px);
+}
+.bgadie_dice .left.inner {
+    transform: rotateY(-90deg) translateZ(98px);
+}
+.bgadie_dice .top {
+    transform: rotateX(90deg) translateZ(100px);
+}
+.bgadie_dice .top.inner {
+    transform: rotateX(90deg) translateZ(98px);
+}
+.bgadie_dice .bottom {
+    transform: rotateX(-90deg) translateZ(100px);
+}
+.bgadie_dice .bottom.inner {
+    transform: rotateX(-90deg) translateZ(98px);
+}
+.dot {
+    position:absolute;
+    width:46px;
+    height:46px;
+    border-radius:23px;
+    background:#444;
+    box-shadow:inset 5px 0 10px #000;
+}
+.dot.center {
+    margin:77px 0 0 77px;
+}
+.dot.dtop {
+    margin-top:20px;
+}
+.dot.dleft {
+    margin-left:134px;
+}
+.dot.dright {
+    margin-left:20px;
+}
+.dot.dbottom {
+    margin-top:134px;
+}
+.dot.center.dleft {
+    margin:77px 0 0 20px;
+}
+.dot.center.dright {
+    margin:77px 0 0 134px;
+}
+
+
+/************* Shipping choice panel ******************/
+
+#shipping_choice_panel {
+    width: 160px;
+    height: 160px;
+    position: absolute;
+    display: none;
+    z-index: 50;
+}
+
+#shipping_choice_consume,
+#shipping_choice_trade {
+
+    width: 160px;
+    height: 40px;
+    margin-bottom: 48px;
+    background-color: white;
+    border-radius: 5px;
+    border: 2px gray solid;
+    cursor: pointer;
+    text-align: center;
+    padding-top: 10px;
+    font-weight: bold;
+    
+}
+
+.notouch-device #shipping_choice_consume:hover,
+.notouch-device #shipping_choice_trade:hover {
+    background-color: #f5f5f5;
+}
+
+
+
+#tradeprice {
+    width: 41px;
+    height: 69px;
+    background-image: url('img/tradeprice.png');
+    margin-top: -26px;
+    margin-bottom: -25px;
+    margin-left: 10px;   
+    display: inline-block; 
+}
+
+
+/*
+#roll:checked ~ label[for=roll] {
+	margin-top:-100px;
+}
+#roll:checked ~ label[for=secondroll] {
+	margin-top:0px;
+}
+#secondroll:checked ~ label[for=secondroll] {
+	text-shadow:0 -1px 0 #336633;
+	border-color:#66FF99;
+	background: -moz-linear-gradient(top, #66CC66 0%, #336633 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#66CC66), color-stop(100%,#336633));
+	background: -webkit-linear-gradient(top, #66CC66 0%,#336633 100%);
+	background: linear-gradient(to bottom, #66CC66 0%,#336633 100%);
+}
+#secondroll:checked ~ label[for=secondroll] span {
+	display:none;
+}
+#secondroll:checked ~ label[for=secondroll]:after {
+	content:"Keep rollin'!";
+}
+*/
+
+/********* You can start writing your CSS below this line: **********/
+
+
+/*
+    Example of CSS sprites (a black token and a white token, 20x20px each, embedded in the same "tokens.png" 40x20px image):
+
+    .white_token {
+        background-image: url('img/tokens.png');
+        background-position: 0px 0px;
+    }
+    .black_token {
+        background-image: url('img/tokens.png');
+        background-position: -20px 0px;
+    }
+    .token {
+        width: 20px;
+        height: 20px;
+        background-repeat: none;
+    }
+*/
+
+
+
+

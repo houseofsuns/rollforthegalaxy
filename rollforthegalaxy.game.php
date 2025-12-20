@@ -503,7 +503,8 @@ class RollForTheGalaxy extends Table
             }
         }
 
-        if( $phase_id == 1 )
+        // TODO: why is this here?
+        if( $die_to_use === null && $phase_id == 1 )
         {
             // Consume in priority Alien die
             foreach( $dice as $die )

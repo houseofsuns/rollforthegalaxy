@@ -40,11 +40,10 @@
 
         $player_nbr = count( $players );    // Note: number of players = number of rows
 
-        global $g_user;
         $this->page->begin_block( "rollforthegalaxy_rollforthegalaxy", "player" );
         foreach( $players as $player_id => $player )
         {
-            if( $player_id == $g_user->get_id() )
+            if( $player_id == $this->getCurrentPlayerId() )
             {
                 $this->page->insert_block( "player", array( "PLAYER_ID" => $player['player_id'],
                                                             "PLAYER_NAME" => $player['player_name'],
@@ -55,7 +54,7 @@
         }
         foreach( $players as $player_id => $player )
         {
-            if( $player_id != $g_user->get_id() )
+            if( $player_id != $this->getCurrentPlayerId() )
             {
                 $this->page->insert_block( "player", array( "PLAYER_ID" => $player['player_id'],
                                                             "PLAYER_NAME" => $player['player_name'],

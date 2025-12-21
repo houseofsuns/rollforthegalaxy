@@ -618,7 +618,11 @@ function (dojo, declare) {
                  case 'explore':
                     this.addActionButton( 'scout', _('Scout (new tiles)'), 'onScout' );
                     this.addActionButton( 'scoutdiscard', _('Discard selected tiles'), 'onScoutDiscard' );
-                    this.addActionButton( 'stock', _('Stock (+2$)'), 'onStock' );
+                    if (this.hasAlienArchaeology(this.player_id)) {
+                        this.addActionButton( 'stock', _('Stock (+2$/4$)'), 'onStock' );
+                    } else {
+                        this.addActionButton( 'stock', _('Stock (+2$)'), 'onStock' );
+                    }
                     break;
 
                  case 'manage':
@@ -665,6 +669,16 @@ function (dojo, declare) {
             script.
 
         */
+
+        hasAlienArchaeology: function( player_id )
+        {
+            for (const val of Object.values(this.gamedatas.tableau)) {
+                if (val.type == "1003" && val.location_arg == player_id) {
+                    return true;
+                }
+            }
+            return false;
+        },
 
         setupNewCard: function( card_div, card_type_id, card_id )
         {

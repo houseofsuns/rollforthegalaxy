@@ -2244,18 +2244,23 @@ class RollForTheGalaxy extends Table
                 }
             }
 
-            self::notifyAllPlayers( 'simpleNote', clienttranslate('Alien Research Team: ${player_name} picks ${nbr} tiles.'), array('player_name'=> self::getCurrentPlayerName(), 'nbr' => count( $scouted ) ) );
-            self::notifyPlayer( $player_id, 'scouted', '', array(
-                'tiles' => self::toDoubleSidedTiles( $scouted )
-            ) );
+            if( count( $scouted ) > 0 )
+            {
+                self::notifyAllPlayers( 'simpleNote', clienttranslate('Alien Research Team: ${player_name} picks ${nbr} tiles.'), array('player_name'=> self::getCurrentPlayerName(), 'nbr' => count( $scouted ) ) );
+                self::notifyPlayer( $player_id, 'scouted', '', array(
+                    'tiles' => self::toDoubleSidedTiles( $scouted )
+                ) );
 
 
-            $this->gamestate->changeActivePlayer( $player_id );
-            $this->gamestate->nextState( 'alien_research' );
+                $this->gamestate->changeActivePlayer( $player_id );
+                $this->gamestate->nextState( 'alien_research' );
 
-            self::giveExtraTime( $player_id );
+                self::giveExtraTime( $player_id );
 
-            return  ;
+                return  ;
+            } else {
+                self::notifyAllPlayers( 'simpleNote', "WARNING: skipping Alien Research Team :(", array() );
+            }
         }
 
 

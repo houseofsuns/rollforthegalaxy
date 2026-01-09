@@ -585,6 +585,18 @@ class RollForTheGalaxy extends Table
 
         if( count( $dice ) == 0 )
         {
+            // During Explore phase (phase 1), keep players with Advanced Logistics active
+            // so they can still rearrange tiles after using their last die
+            if( $phase_id == 1 )
+            {
+                $advanced_logistics_tiles = self::getTilesWithEffects( 'explore_reassign', $player_id );
+                if( count( $advanced_logistics_tiles ) > 0 )
+                {
+                    // Player has Advanced Logistics - keep them active, they need to click "Done" manually
+                    return;
+                }
+            }
+
             $state = $this->gamestate->state();
             if( $state['type'] == 'activeplayer' )
                 $this->gamestate->nextState( 'no_more_actions' );
@@ -1064,7 +1076,7 @@ class RollForTheGalaxy extends Table
 
     function advancedlogistics( $tile_id, $action )
     {
-        self::checkAction( 'stock' );
+        self::checkAction( 'advancedlogistics' );
 
         $player_id = self::getCurrentPlayerId();
 
@@ -1467,6 +1479,24 @@ class RollForTheGalaxy extends Table
         // If no dice in cup, must recall at least 1 die
         if( $this->dice->countCardInLocation( 'cup', $player_id ) == 0 )
             throw new feException( self::_("You must RECALL at least one dice from anywhere, otherwise your cup will be empty!"), true );
+
+        $this->gamestate->setPlayerNonMultiactive( $player_id, "no_more_actions" );
+    }
+
+    function exploreDone()
+    {
+        self::checkAction( 'exploreDone' );
+
+        $player_id = self::getCurrentPlayerId();
+
+        // Check if player still has dice to use
+        $dice = $this->dice->getCardsInLocation( 'phase1', $player_id );
+        if( count( $dice ) > 0 )
+            throw new feException( self::_("You still have dice to use during this phase."), true );
+
+        // Check if player still has scouted tiles to place
+        if( $this->tiles->countCardInLocation( 'scout', $player_id ) > 0 )
+            throw new feException( self::_("You must place your scouted tiles first."), true );
 
         $this->gamestate->setPlayerNonMultiactive( $player_id, "no_more_actions" );
     }
@@ -2192,27 +2222,46 @@ class RollForTheGalaxy extends Table
     {
         $player_to_dice_nbr = self::getDiceForPhase( 1 );
 
-        if( $player_to_dice_nbr === null )
+        // Also activate players with Advanced Logistics (explore_reassign) even if they have no dice
+        $advanced_logistics_tiles = self::getTilesWithEffects( 'explore_reassign' );
+        $players_with_advanced_logistics = array();
+        foreach( $advanced_logistics_tiles as $tile )
+        {
+            $players_with_advanced_logistics[ $tile['location_arg'] ] = true;
+        }
+
+        if( $player_to_dice_nbr === null && count( $players_with_advanced_logistics ) == 0 )
         {
             $this->returnUnusedDiceToCup( 1 );
             $this->gamestate->nextState('skipPhase');
         }
         else
         {
-            // Active all players who have dice for this phase
+            // Active all players who have dice for this phase OR have Advanced Logistics
 
             self::setGameStateValue( 'saved_dice_nbr', 0 ); // Used on this phase for Alien reseach team
 
+            if( $player_to_dice_nbr === null )
+                $player_to_dice_nbr = array();
+
             $player_to_dice_nbr = self::addTmpDiceForPhase( 1, $player_to_dice_nbr );
 
-            $this->gamestate->setPlayersMultiactive( array_keys( $player_to_dice_nbr ), 'skipPhase', true );
+            // Merge players with Advanced Logistics into the active players list
+            $active_players = array_keys( $player_to_dice_nbr );
+            foreach( $players_with_advanced_logistics as $player_id => $val )
+            {
+                if( ! in_array( $player_id, $active_players ) )
+                    $active_players[] = $player_id;
+            }
 
-            foreach( $player_to_dice_nbr as $player_id => $player )
+            $this->gamestate->setPlayersMultiactive( $active_players, 'skipPhase', true );
+
+            foreach( $active_players as $player_id )
             {
                 self::giveExtraTime( $player_id );
             }
 
-            if( count( $player_to_dice_nbr ) > 0 )
+            if( count( $active_players ) > 0 )
                 $this->gamestate->nextState('startPhase');
         }
     }

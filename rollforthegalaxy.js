@@ -623,6 +623,11 @@ function (dojo, declare) {
                     } else {
                         this.addActionButton( 'stock', _('Stock (+2$)'), 'onStock' );
                     }
+                    // Add Done button for players with Advanced Logistics who have no dice left
+                    if( this.hasAdvancedLogistics(this.player_id) )
+                    {
+                        this.addActionButton( 'exploreDone', _('Done'), 'onExploreDone' );
+                    }
                     break;
 
                  case 'manage':
@@ -674,6 +679,16 @@ function (dojo, declare) {
         {
             for (const val of Object.values(this.gamedatas.tableau)) {
                 if (val.type == "1003" && val.location_arg == player_id) {
+                    return true;
+                }
+            }
+            return false;
+        },
+
+        hasAdvancedLogistics: function( player_id )
+        {
+            for (const val of Object.values(this.gamedatas.tableau)) {
+                if (val.type == "32" && val.location_arg == player_id) {
                     return true;
                 }
             }
@@ -826,7 +841,7 @@ function (dojo, declare) {
 
         onAlMoveToTop: function( evt )
         {
-            this.checkAction( 'scout' );
+            this.checkAction( 'advancedlogistics' );
 
             var tile_id = evt.currentTarget.id.substr( 12 );
             this.ajaxcall( "/rollforthegalaxy/rollforthegalaxy/advancedlogistics.html", {
@@ -838,7 +853,7 @@ function (dojo, declare) {
         },
         onAlMoveToBot: function( evt )
         {
-            this.checkAction( 'scout' );
+            this.checkAction( 'advancedlogistics' );
 
             var tile_id = evt.currentTarget.id.substr( 12 );
             this.ajaxcall( "/rollforthegalaxy/rollforthegalaxy/advancedlogistics.html", {
@@ -850,7 +865,7 @@ function (dojo, declare) {
         },
         onAlFlip: function( evt )
         {
-            this.checkAction( 'scout' );
+            this.checkAction( 'advancedlogistics' );
 
             var tile_id = evt.currentTarget.id.substr( 12 );
             this.ajaxcall( "/rollforthegalaxy/rollforthegalaxy/advancedlogistics.html", {
@@ -2087,6 +2102,14 @@ function (dojo, declare) {
         onManageDone: function()
         {
             this.ajaxcall( "/rollforthegalaxy/rollforthegalaxy/manageDone.html", {
+                                                                    lock: true
+                                                                 },
+                         this, function( result ) {}, function( is_error) {} );
+        },
+
+        onExploreDone: function()
+        {
+            this.ajaxcall( "/rollforthegalaxy/rollforthegalaxy/exploreDone.html", {
                                                                     lock: true
                                                                  },
                          this, function( result ) {}, function( is_error) {} );

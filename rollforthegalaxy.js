@@ -616,12 +616,19 @@ function (dojo, declare) {
                     break;
 
                  case 'explore':
+                    // Always add Scout/Stock/Discard buttons initially
+                    // They will be dynamically hidden when dice are consumed
                     this.addActionButton( 'scout', _('Scout (new tiles)'), 'onScout' );
                     this.addActionButton( 'scoutdiscard', _('Discard selected tiles'), 'onScoutDiscard' );
                     if (this.hasAlienArchaeology(this.player_id)) {
                         this.addActionButton( 'stock', _('Stock (+2$/4$)'), 'onStock' );
                     } else {
                         this.addActionButton( 'stock', _('Stock (+2$)'), 'onStock' );
+                    }
+                    // Add Done button for players with Advanced Logistics
+                    if( this.hasAdvancedLogistics(this.player_id) )
+                    {
+                        this.addActionButton( 'exploreDone', _('Done'), 'onExploreDone' );
                     }
                     break;
 
@@ -674,6 +681,16 @@ function (dojo, declare) {
         {
             for (const val of Object.values(this.gamedatas.tableau)) {
                 if (val.type == "1003" && val.location_arg == player_id) {
+                    return true;
+                }
+            }
+            return false;
+        },
+
+        hasAdvancedLogistics: function( player_id )
+        {
+            for (const val of Object.values(this.gamedatas.tableau)) {
+                if (val.type == "32" && val.location_arg == player_id) {
                     return true;
                 }
             }
@@ -826,7 +843,7 @@ function (dojo, declare) {
 
         onAlMoveToTop: function( evt )
         {
-            this.checkAction( 'scout' );
+            this.checkAction( 'advancedlogistics' );
 
             var tile_id = evt.currentTarget.id.substr( 12 );
             this.ajaxcall( "/rollforthegalaxy/rollforthegalaxy/advancedlogistics.html", {
@@ -838,7 +855,7 @@ function (dojo, declare) {
         },
         onAlMoveToBot: function( evt )
         {
-            this.checkAction( 'scout' );
+            this.checkAction( 'advancedlogistics' );
 
             var tile_id = evt.currentTarget.id.substr( 12 );
             this.ajaxcall( "/rollforthegalaxy/rollforthegalaxy/advancedlogistics.html", {
@@ -850,7 +867,7 @@ function (dojo, declare) {
         },
         onAlFlip: function( evt )
         {
-            this.checkAction( 'scout' );
+            this.checkAction( 'advancedlogistics' );
 
             var tile_id = evt.currentTarget.id.substr( 12 );
             this.ajaxcall( "/rollforthegalaxy/rollforthegalaxy/advancedlogistics.html", {
@@ -2092,6 +2109,14 @@ function (dojo, declare) {
                          this, function( result ) {}, function( is_error) {} );
         },
 
+        onExploreDone: function()
+        {
+            this.ajaxcall( "/rollforthegalaxy/rollforthegalaxy/exploreDone.html", {
+                                                                    lock: true
+                                                                 },
+                         this, function( result ) {}, function( is_error) {} );
+        },
+
 
         /* Example:
 
@@ -2392,6 +2417,19 @@ function (dojo, declare) {
             {
                 this.dicePhases[ notif.args.player_id ][ origin_phase_id ].removeFromStockById( notif.args.die.id );
             }
+
+            // If this is the current player and we're in Explore phase (1), 
+            // hide Scout/Stock/Discard buttons when no dice left
+            if( notif.args.player_id == this.player_id && origin_phase_id == '1' )
+            {
+                if( this.dicePhases[this.player_id][1].count() == 0 )
+                {
+                    // No more dice - hide the explore action buttons
+                    if( $('scout') ) dojo.destroy('scout');
+                    if( $('scoutdiscard') ) dojo.destroy('scoutdiscard');
+                    if( $('stock') ) dojo.destroy('stock');
+                }
+            }
         },
 
         notif_produce: function( notif )
@@ -2502,6 +2540,20 @@ function (dojo, declare) {
         {
             // Die removed from the game
             this.removeDieFromAnywhere( notif.args.die );
+
+            // If this is the current player and die was from Explore phase (1), 
+            // hide Scout/Stock/Discard buttons when no dice left
+            if( notif.args.player_id == this.player_id && 
+                notif.args.location == 'phase' && notif.args.phase == 1 )
+            {
+                if( this.dicePhases[this.player_id][1].count() == 0 )
+                {
+                    // No more dice - hide the explore action buttons
+                    if( $('scout') ) dojo.destroy('scout');
+                    if( $('scoutdiscard') ) dojo.destroy('scoutdiscard');
+                    if( $('stock') ) dojo.destroy('stock');
+                }
+            }
         },
 
         getDieDivIdAnywhere: function( die, player_id )

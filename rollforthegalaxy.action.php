@@ -133,6 +133,13 @@
         self::ajaxResponse( );
     }
 
+    function exploreDone()
+    {
+        self::setAjaxMode();
+  	    $this->game->exploreDone( );
+        self::ajaxResponse( );
+    }
+
     function wantToTrade()
     {
         self::setAjaxMode();

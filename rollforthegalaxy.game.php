@@ -1063,7 +1063,6 @@ class RollForTheGalaxy extends Table
         self::notifyAllPlayers( 'scoutdiscard', clienttranslate('${player_name} discard ${nbr} card from construction zone to pick ${nbr} more card on scout action.'), array(
             'player_name' => self::getCurrentPlayerName(),
             'player_id' => $player_id,
-            'cards' => $cards,
             'dev_cards' => $dev_cards,
             'world_cards' => $world_cards,
             'nbr' => count( $tiles )

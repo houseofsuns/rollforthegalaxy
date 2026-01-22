@@ -1092,32 +1092,20 @@ class RollForTheGalaxy extends Table
         else
             $zone = 'world';
 
+        $private_tiles = array(
+            'dev' => null,
+            'world' => null,
+        );
 
         if( $action == 'top' )
         {
             $this->tiles->insertCardOnExtremePosition( $tile_id, $tile['location'], true );
-
-            self::notifyPlayer( $player_id, 'resetConstruction', '', array(
-                'tiles' => $this->tiles->getCardsInLocation( $tile['location'], null, 'location_arg' ),
-                'zone' => $zone
-            ) );
-            self::notifyAllPlayers( 'simpleNote', clienttranslate('${player_name} uses Advanced Logistics to reorder his construction zone.'), array(
-                'player_name' => self::getCurrentPlayerName()
-            ) );
+            $private_tiles[$zone] = $this->tiles->getCardsInLocation( $tile['location'], null, 'location_arg' );
         }
         else if( $action == 'bot' )
         {
             $this->tiles->insertCardOnExtremePosition( $tile_id, $tile['location'], false );
-
-            self::notifyPlayer( $player_id, 'resetConstruction', '', array(
-                'tiles' => $this->tiles->getCardsInLocation( $tile['location'],null, 'location_arg' ),
-                'zone' => $zone
-            ) );
-
-            self::notifyAllPlayers( 'simpleNote', clienttranslate('${player_name} uses Advanced Logistics to reorder his construction zone.'), array(
-                'player_name' => self::getCurrentPlayerName()
-            ) );
-
+            $private_tiles[$zone] = $this->tiles->getCardsInLocation( $tile['location'], null, 'location_arg' );
         }
         else if( $action == 'flip' )
         {
@@ -1132,20 +1120,32 @@ class RollForTheGalaxy extends Table
                 self::DbQuery( "UPDATE tile SET card_type='$world_to_dev_type', card_location='bd$player_id' WHERE card_id='$tile_id' " );
             }
 
-            self::notifyPlayer( $player_id, 'resetConstruction', '', array(
-                'tiles' => $this->tiles->getCardsInLocation( 'bd'.$player_id, null, 'location_arg' ),
-                'zone' => 'dev'
-            ) );
-            self::notifyPlayer( $player_id, 'resetConstruction', '', array(
-                'tiles' => $this->tiles->getCardsInLocation( 'bw'.$player_id, null, 'location_arg' ),
-                'zone' => 'world'
-            ) );
-
-            self::notifyAllPlayers( 'simpleNote', clienttranslate('${player_name} uses Advanced Logistics to reorder his construction zone.'), array(
-                'player_name' => self::getCurrentPlayerName()
-            ) );
-
+            $private_tiles['dev'] = $this->tiles->getCardsInLocation( 'bd'.$player_id, null, 'location_arg' );
+            $private_tiles['world'] = $this->tiles->getCardsInLocation( 'bw'.$player_id, null, 'location_arg' );
         }
+
+        $public_tiles = $private_tiles;
+        foreach (['dev', 'world'] as $z) {
+            if ($public_tiles[$z] != null) {
+                for ($i = 0; $i < count($public_tiles[$z]) - 1; $i++) {
+                    // Use Secluded World as dummy
+                    $public_tiles[$z][$i]['type'] = 1;
+                }
+            }
+        }
+
+        $this->bga->notify->all('resetConstruction', clienttranslate('${player_name} uses Advanced Logistics to reorder his construction zone.'), array(
+            'player_id' => $player_id,
+            'player_name' => self::getCurrentPlayerName(),
+            'dev_tiles' => $public_tiles['dev'],
+            'world_tiles' => $public_tiles['world'],
+            '_private' => [
+                $player_id => [
+                    'my_dev_tiles' => $private_tiles['dev'],
+                    'my_world_tiles' => $private_tiles['world'],
+                ]
+            ],
+        ));
     }
 
 

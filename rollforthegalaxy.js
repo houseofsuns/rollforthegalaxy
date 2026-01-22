@@ -2838,26 +2838,35 @@ function (dojo, declare) {
 
         notif_resetConstruction: function( notif )
         {
-            if( notif.args.zone == 'dev' )
+            var devTiles = notif.args.dev_tiles;
+            var worldTiles = notif.args.world_tiles;
+            if (notif.args.player_id == this.player_id)
             {
-                this.playerDevInBuilt[ this.player_id ].removeAll();
+                devTiles = notif.args._private.my_dev_tiles;
+                worldTiles = notif.args._private.my_world_tiles;
+            }
+            if( devTiles != null )
+            {
+                this.playerDevInBuilt[ notif.args.player_id ].removeAll();
 
-                for( var i in notif.args.tiles )
+                for( var i in devTiles )
                 {
-                    var tile = notif.args.tiles[i];
-                    this.playerDevInBuilt[ this.player_id ].addToStockWithId( tile.type, tile.id );
+                    var tile = devTiles[i];
+                    this.playerDevInBuilt[ notif.args.player_id ].addToStockWithId( tile.type, tile.id );
                 }
+                $('dev_in_built_counter_'+notif.args.player_id).innerHTML = Object.keys(devTiles).length;
 
             }
-            else if( notif.args.zone == 'world' )
+            if( worldTiles != null )
             {
-                this.playerWorldInBuilt[ this.player_id ].removeAll();
+                this.playerWorldInBuilt[ notif.args.player_id ].removeAll();
 
-                for( var i in notif.args.tiles )
+                for( var i in worldTiles )
                 {
-                    var tile = notif.args.tiles[i];
-                    this.playerWorldInBuilt[ this.player_id ].addToStockWithId( tile.type, tile.id );
+                    var tile = worldTiles[i];
+                    this.playerWorldInBuilt[ notif.args.player_id ].addToStockWithId( tile.type, tile.id );
                 }
+                $('world_in_built_counter_'+notif.args.player_id).innerHTML = Object.keys(worldTiles).length;
 
             }
         },

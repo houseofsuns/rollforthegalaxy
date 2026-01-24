@@ -634,7 +634,7 @@ function (dojo, declare) {
                         // Update title for Advanced Logistics users
                         if( this.hasAdvancedLogistics(this.player_id) )
                         {
-                            $('pagemaintitletext').innerHTML = _("Explore: You may rearrange your tiles");
+                            this.statusBar.setTitle(_("Explore: ${you} may rearrange your tile(s)"));
                         }
                     }
                     
@@ -730,7 +730,7 @@ function (dojo, declare) {
             {
                 dojo.style('exploreDone', 'display', 'inline-block');
                 // Update title to reflect Advanced Logistics action
-                $('pagemaintitletext').innerHTML = _("Explore: You may rearrange your tiles");
+                this.statusBar.setTitle(_("Explore: ${you} may rearrange your tile(s)"));
             }
         },
 

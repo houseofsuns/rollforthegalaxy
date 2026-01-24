@@ -629,7 +629,8 @@ function (dojo, declare) {
                     if( this.hasAdvancedLogistics(this.player_id) )
                     {
                         this.addActionButton( 'exploreDone', _('Done'), 'onExploreDone' );
-                        // Initially disable - will be enabled when no dice and no scouted tiles left
+                        // Initially hide - will be shown when no dice and no scouted tiles left
+                        dojo.style('exploreDone', 'display', 'none');
                         this.updateExploreDoneButton();
                     }
                     break;
@@ -699,7 +700,7 @@ function (dojo, declare) {
             return false;
         },
 
-        // Update the Explore Done button state - enable only when no dice and no scouted tiles left
+        // Update the Explore Done button visibility - show only when no dice and no scouted tiles left
         updateExploreDoneButton: function()
         {
             if( ! $('exploreDone') ) return;
@@ -710,11 +711,11 @@ function (dojo, declare) {
 
             if( hasDice || hasScoutedTiles )
             {
-                dojo.addClass('exploreDone', 'disabled');
+                dojo.style('exploreDone', 'display', 'none');
             }
             else
             {
-                dojo.removeClass('exploreDone', 'disabled');
+                dojo.style('exploreDone', 'display', 'inline-block');
             }
         },
 

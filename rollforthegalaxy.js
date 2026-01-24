@@ -629,6 +629,8 @@ function (dojo, declare) {
                     if( this.hasAdvancedLogistics(this.player_id) )
                     {
                         this.addActionButton( 'exploreDone', _('Done'), 'onExploreDone' );
+                        // Initially disable - will be enabled when no dice and no scouted tiles left
+                        this.updateExploreDoneButton();
                     }
                     break;
 
@@ -695,6 +697,25 @@ function (dojo, declare) {
                 }
             }
             return false;
+        },
+
+        // Update the Explore Done button state - enable only when no dice and no scouted tiles left
+        updateExploreDoneButton: function()
+        {
+            if( ! $('exploreDone') ) return;
+
+            var hasDice = this.dicePhases[this.player_id][1].count() > 0;
+            var hasScoutedTiles = this.scoutedDev !== null && 
+                (this.scoutedDev.count() + this.scoutedWorld.count() > 0);
+
+            if( hasDice || hasScoutedTiles )
+            {
+                dojo.addClass('exploreDone', 'disabled');
+            }
+            else
+            {
+                dojo.removeClass('exploreDone', 'disabled');
+            }
         },
 
         setupNewCard: function( card_div, card_type_id, card_id )
@@ -2422,6 +2443,8 @@ function (dojo, declare) {
                     if( $('scoutdiscard') ) dojo.style('scoutdiscard', 'display', 'none');
                     if( $('stock') ) dojo.style('stock', 'display', 'none');
                 }
+                // Update Done button state
+                this.updateExploreDoneButton();
             }
         },
 
@@ -2546,6 +2569,8 @@ function (dojo, declare) {
                     if( $('scoutdiscard') ) dojo.style('scoutdiscard', 'display', 'none');
                     if( $('stock') ) dojo.style('stock', 'display', 'none');
                 }
+                // Update Done button state
+                this.updateExploreDoneButton();
             }
         },
 
@@ -2847,6 +2872,9 @@ function (dojo, declare) {
             {
                 this.hideScoutPanel();
             }
+
+            // Update Done button state after placing scouted tile
+            this.updateExploreDoneButton();
         },
 
         notif_newConstruction: function( notif )

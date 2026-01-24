@@ -625,8 +625,7 @@ function (dojo, declare) {
                         this.addActionButton( 'stock', _('Stock (+2$)'), 'onStock' );
                     }
                     
-                    // Player having no dice and explore phase not being done means you are just rearranging tiles.
-                    if( this.dicePhases[this.player_id][1].count() == 0 )
+                    if( this.getExploreDiceCount() == 0 )
                     {
                         dojo.style('scout', 'display', 'none');
                         dojo.style('scoutdiscard', 'display', 'none');
@@ -711,11 +710,17 @@ function (dojo, declare) {
             return false;
         },
 
+        getExploreDiceCount: function()
+        {
+            return this.dicePhases[this.player_id][1].count() + 
+                   this.dicePhasesHeader[this.player_id][1].count();
+        },
+
         updateExploreDoneButton: function()
         {
             if( ! $('exploreDone') ) return;
 
-            var hasDice = this.dicePhases[this.player_id][1].count() > 0;
+            var hasDice = this.getExploreDiceCount() > 0;
             var hasScoutedTiles = this.scoutedDev !== null && 
                 (this.scoutedDev.count() + this.scoutedWorld.count() > 0);
 
@@ -2449,9 +2454,8 @@ function (dojo, declare) {
             if( notif.args.player_id == this.player_id && 
                 this.gamedatas.gamestate.name == 'explore' )
             {
-                if( this.dicePhases[this.player_id][1].count() == 0 )
+                if( this.getExploreDiceCount() == 0 )
                 {
-                    // No more dice so explore action buttons will just lead to server errors.
                     if( $('scout') ) dojo.style('scout', 'display', 'none');
                     if( $('scoutdiscard') ) dojo.style('scoutdiscard', 'display', 'none');
                     if( $('stock') ) dojo.style('stock', 'display', 'none');
@@ -2574,9 +2578,8 @@ function (dojo, declare) {
             if( notif.args.player_id == this.player_id && 
                 this.gamedatas.gamestate.name == 'explore' )
             {
-                if( this.dicePhases[this.player_id][1].count() == 0 )
+                if( this.getExploreDiceCount() == 0 )
                 {
-                    // No more dice so explore action buttons will just lead to server errors.
                     if( $('scout') ) dojo.style('scout', 'display', 'none');
                     if( $('scoutdiscard') ) dojo.style('scoutdiscard', 'display', 'none');
                     if( $('stock') ) dojo.style('stock', 'display', 'none');

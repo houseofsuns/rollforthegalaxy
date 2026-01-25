@@ -1410,6 +1410,47 @@ class RollForTheGalaxy extends Bga\GameFramework\Table
         }
     }
 
+    function tryAutoSkipManage( $player_id )
+    {
+        // Auto-skip manage phase if player has no decisions to make
+
+        // 1. Can they still recruit?
+        $current_credit = self::getUniqueValueFromDB( "SELECT player_credit FROM player WHERE player_id='$player_id'" );
+        $citizenry_count = $this->dice->countCardInLocation( 'citizenry', $player_id );
+
+        if( $current_credit > 0 && $citizenry_count > 0 )
+            return; // Still has recruiting decisions
+
+        // 2. Do they have dice they could recall?
+        $recallable_dice = $this->dice->countCardInLocation( 'worldconstruct', $player_id )
+                         + $this->dice->countCardInLocation( 'devconstruct', $player_id );
+
+        // Also count dice on resources (on their tableau worlds)
+        $resource_dice = $this->dice->getCardsInLocation( 'resource' );
+        foreach( $resource_dice as $die )
+        {
+            $world = $this->tiles->getCard( $die['location_arg'] );
+            if( $world['location'] == 'tableau' && $world['location_arg'] == $player_id )
+                $recallable_dice++;
+        }
+
+        if( $recallable_dice > 0 )
+            return; // Has dice they could recall
+
+        // 3. Reset credit to 1 if needed (same as manageDone)
+        if( $current_credit == 0 )
+        {
+            self::DbQuery( "UPDATE player SET player_credit = 1 WHERE player_id='$player_id'" );
+            self::notifyAllPlayers( "updateCredit", '', array(
+                'player_id' => $player_id,
+                'credit' => 1,
+            ) );
+        }
+
+        // Auto-skip this player
+        $this->gamestate->setPlayerNonMultiactive( $player_id, "no_more_actions" );
+    }
+
     function doRecruit( $player_id, $die_id )
     {
         // Is this die on citizenry
@@ -3688,6 +3729,7 @@ class RollForTheGalaxy extends Bga\GameFramework\Table
         {
             self::giveExtraTime( $player_id );
             $this->autorecruit( $player_id, $bForceAutorecruit );
+            $this->tryAutoSkipManage( $player_id );
         }
     }
 

@@ -119,7 +119,7 @@ $machinestates = array(
     		"description" => clienttranslate('Explore: Everyone must scout or stock'),
     		"descriptionmyturn" => clienttranslate('Explore: ${you} must scout or stock'),
     		"type" => "multipleactiveplayer",
-    		"possibleactions" => array( "scout", "stock" ),
+    		"possibleactions" => array( "scout", "stock", "advancedlogistics", "exploreDone" ),
     		"transitions" => array( "no_more_actions" => 29, "zombiePass" => 29 )
     ),
 

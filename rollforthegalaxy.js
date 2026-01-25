@@ -616,12 +616,32 @@ function (dojo, declare) {
                     break;
 
                  case 'explore':
+                    // Add Scout/Stock/Discard buttons
                     this.addActionButton( 'scout', _('Scout (new tiles)'), 'onScout' );
                     this.addActionButton( 'scoutdiscard', _('Discard selected tiles'), 'onScoutDiscard' );
                     if (this.hasAlienArchaeology(this.player_id)) {
                         this.addActionButton( 'stock', _('Stock (+2$/4$)'), 'onStock' );
                     } else {
                         this.addActionButton( 'stock', _('Stock (+2$)'), 'onStock' );
+                    }
+                    
+                    if( this.getExploreDiceCount() == 0 )
+                    {
+                        dojo.style('scout', 'display', 'none');
+                        dojo.style('scoutdiscard', 'display', 'none');
+                        dojo.style('stock', 'display', 'none');
+                        if( this.hasAdvancedLogistics(this.player_id) )
+                        {
+                            this.statusBar.setTitle(_("Explore: ${you} may rearrange your tile(s)"));
+                        }
+                    }
+                    
+                    // Players with AL will need a done button to confirm their tile rearrangement after using their last die.
+                    if( this.hasAdvancedLogistics(this.player_id) )
+                    {
+                        this.addActionButton( 'exploreDone', _('Done'), 'onExploreDone' );
+                        dojo.style('exploreDone', 'display', 'none');
+                        this.updateExploreDoneButton();
                     }
                     break;
 
@@ -678,6 +698,41 @@ function (dojo, declare) {
                 }
             }
             return false;
+        },
+
+        hasAdvancedLogistics: function( player_id )
+        {
+            for (const val of Object.values(this.gamedatas.tableau)) {
+                if (val.type == "32" && val.location_arg == player_id) {
+                    return true;
+                }
+            }
+            return false;
+        },
+
+        getExploreDiceCount: function()
+        {
+            return this.dicePhases[this.player_id][1].count() + 
+                   this.dicePhasesHeader[this.player_id][1].count();
+        },
+
+        updateExploreDoneButton: function()
+        {
+            if( ! $('exploreDone') ) return;
+
+            var hasDice = this.getExploreDiceCount() > 0;
+            var hasScoutedTiles = this.scoutedDev !== null && 
+                (this.scoutedDev.count() + this.scoutedWorld.count() > 0);
+
+            if( hasDice || hasScoutedTiles )
+            {
+                dojo.style('exploreDone', 'display', 'none');
+            }
+            else
+            {
+                dojo.style('exploreDone', 'display', 'inline-block');
+                this.statusBar.setTitle(_("Explore: ${you} may rearrange your tile(s)"));
+            }
         },
 
         setupNewCard: function( card_div, card_type_id, card_id )
@@ -826,7 +881,7 @@ function (dojo, declare) {
 
         onAlMoveToTop: function( evt )
         {
-            this.checkAction( 'scout' );
+            this.checkAction( 'advancedlogistics' );
 
             var tile_id = evt.currentTarget.id.substr( 12 );
             this.ajaxcall( "/rollforthegalaxy/rollforthegalaxy/advancedlogistics.html", {
@@ -838,7 +893,7 @@ function (dojo, declare) {
         },
         onAlMoveToBot: function( evt )
         {
-            this.checkAction( 'scout' );
+            this.checkAction( 'advancedlogistics' );
 
             var tile_id = evt.currentTarget.id.substr( 12 );
             this.ajaxcall( "/rollforthegalaxy/rollforthegalaxy/advancedlogistics.html", {
@@ -850,7 +905,7 @@ function (dojo, declare) {
         },
         onAlFlip: function( evt )
         {
-            this.checkAction( 'scout' );
+            this.checkAction( 'advancedlogistics' );
 
             var tile_id = evt.currentTarget.id.substr( 12 );
             this.ajaxcall( "/rollforthegalaxy/rollforthegalaxy/advancedlogistics.html", {
@@ -2087,6 +2142,14 @@ function (dojo, declare) {
                          this, function( result ) {}, function( is_error) {} );
         },
 
+        onExploreDone: function()
+        {
+            this.ajaxcall( "/rollforthegalaxy/rollforthegalaxy/exploreDone.html", {
+                                                                    lock: true
+                                                                 },
+                         this, function( result ) {}, function( is_error) {} );
+        },
+
 
         /* Example:
 
@@ -2395,6 +2458,20 @@ function (dojo, declare) {
             {
                 this.dicePhases[ notif.args.player_id ][ origin_phase_id ].removeFromStockById( notif.args.die.id );
             }
+
+            // If this is the current player, check if we should hide explore buttons
+            // We check by game state since die.location may already be updated to citizenry
+            if( notif.args.player_id == this.player_id && 
+                this.gamedatas.gamestate.name == 'explore' )
+            {
+                if( this.getExploreDiceCount() == 0 )
+                {
+                    if( $('scout') ) dojo.style('scout', 'display', 'none');
+                    if( $('scoutdiscard') ) dojo.style('scoutdiscard', 'display', 'none');
+                    if( $('stock') ) dojo.style('stock', 'display', 'none');
+                }
+                this.updateExploreDoneButton();
+            }
         },
 
         notif_produce: function( notif )
@@ -2505,6 +2582,20 @@ function (dojo, declare) {
         {
             // Die removed from the game
             this.removeDieFromAnywhere( notif.args.die );
+
+            // If this is the current player and we're in Explore phase, 
+            // hide Scout/Stock/Discard buttons when no dice left
+            if( notif.args.player_id == this.player_id && 
+                this.gamedatas.gamestate.name == 'explore' )
+            {
+                if( this.getExploreDiceCount() == 0 )
+                {
+                    if( $('scout') ) dojo.style('scout', 'display', 'none');
+                    if( $('scoutdiscard') ) dojo.style('scoutdiscard', 'display', 'none');
+                    if( $('stock') ) dojo.style('stock', 'display', 'none');
+                }
+                this.updateExploreDoneButton();
+            }
         },
 
         getDieDivIdAnywhere: function( die, player_id )
@@ -2805,6 +2896,8 @@ function (dojo, declare) {
             {
                 this.hideScoutPanel();
             }
+
+            this.updateExploreDoneButton();
         },
 
         notif_newConstruction: function( notif )

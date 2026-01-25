@@ -19,9 +19,7 @@
 use Bga\GameFramework\UserException;
 use Bga\GameFramework\SystemException;
 
-require_once( APP_GAMEMODULE_PATH.'module/table/table.game.php' );
-
-class RollForTheGalaxy extends Table
+class RollForTheGalaxy extends Bga\GameFramework\Table
 {
 	function __construct( )
 	{

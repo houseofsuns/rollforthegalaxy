@@ -2285,13 +2285,13 @@ function (dojo, declare) {
         {
             for( var i in notif.args.scores )
             {
-                this.scoreCtrl[ i ].toValue( notif.args.scores[i] );
+                this.bga.playerPanels.getScoreCounter( i ).toValue( notif.args.scores[i] );
             }
         },
 
         notif_score: function( notif )
         {
-            this.scoreCtrl[ notif.args.player_id ].incValue( notif.args.score );
+            this.bga.playerPanels.getScoreCounter( notif.args.player_id ).incValue( notif.args.score );
         },
 
         notif_phasesToActive: function( notif )
@@ -2786,7 +2786,7 @@ function (dojo, declare) {
 
             // Score
             $('player_vp_'+notif.args.player_id).innerHTML = notif.args.score.player_vp_chip;
-            this.scoreCtrl[ notif.args.player_id ].toValue( notif.args.score.player_score );
+            this.bga.playerPanels.getScoreCounter( notif.args.player_id ).toValue( notif.args.score.player_score );
 
 
         },
@@ -2828,7 +2828,7 @@ function (dojo, declare) {
         notif_scorevp: function( notif )
         {
             $('player_vp_'+notif.args.player_id).innerHTML = notif.args.score.player_vp_chip;
-            this.scoreCtrl[ notif.args.player_id ].toValue( notif.args.score.player_score );
+            this.bga.playerPanels.getScoreCounter( notif.args.player_id ).toValue( notif.args.score.player_score );
             $('vp_stock').innerHTML = ( toint( $('vp_stock').innerHTML ) - toint( notif.args.gain ) );
 
             if( toint( $('vp_stock').innerHTML ) <= 0 )

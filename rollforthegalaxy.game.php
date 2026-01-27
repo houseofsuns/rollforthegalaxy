@@ -1508,8 +1508,8 @@ class RollForTheGalaxy extends Bga\GameFramework\Table
         self::DbQuery( "UPDATE dice SET card_location='citizenry'
                         WHERE card_location='cup_recruited' AND card_location_arg='$player_id'" );
 
-        // Send notification to update UI
-        self::notifyPlayer( $player_id, 'resetRecruit', '', array(
+        // Send notification to update UI (notify all players so opponents see the reset too)
+        self::notifyAllPlayers( 'resetRecruit', '', array(
             'player_id' => $player_id,
             'credit' => $initial_credit,
             'citizenry' => $this->dice->getCardsInLocation( 'citizenry', $player_id ),

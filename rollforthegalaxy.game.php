@@ -1421,11 +1421,11 @@ class RollForTheGalaxy extends Bga\GameFramework\Table
         if( $current_credit > 0 && $citizenry_count > 0 )
             return; // Still has recruiting decisions
 
-        // 2. Do they have dice they could recall?
+        // 2. Do they have dice they could recall from their construction zones?
         $recallable_dice = $this->dice->countCardInLocation( 'worldconstruct', $player_id )
                          + $this->dice->countCardInLocation( 'devconstruct', $player_id );
 
-        // Also count dice on resources (on their tableau worlds)
+        // 3. Do they have dice on their tableau worlds?
         $resource_dice = $this->dice->getCardsInLocation( 'resource' );
         foreach( $resource_dice as $die )
         {
@@ -1435,9 +1435,9 @@ class RollForTheGalaxy extends Bga\GameFramework\Table
         }
 
         if( $recallable_dice > 0 )
-            return; // Has dice they could recall
+            return;
 
-        // 3. Reset credit to 1 if needed (same as manageDone)
+        // If we auto skip management, we need to also reset credit to 1 if needed (same as manageDone)
         if( $current_credit == 0 )
         {
             self::DbQuery( "UPDATE player SET player_credit = 1 WHERE player_id='$player_id'" );

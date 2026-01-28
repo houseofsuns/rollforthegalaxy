@@ -1413,16 +1413,14 @@ class RollForTheGalaxy extends Bga\GameFramework\Table
     function tryAutoSkipManage( $player_id )
     {
         // Auto-skip manage phase if player has no decisions to make
+        // Returns true if player was skipped, false if player has decisions to make
 
         // 1. Can they still recruit?
         $current_credit = self::getUniqueValueFromDB( "SELECT player_credit FROM player WHERE player_id='$player_id'" );
         $citizenry_count = $this->dice->countCardInLocation( 'citizenry', $player_id );
 
         if( $current_credit > 0 && $citizenry_count > 0 )
-        {
-            self::giveExtraTime( $player_id );
-            return; // Still has recruiting decisions
-        }
+            return false; // Still has recruiting decisions
 
         // 2. Do they have dice they could recall from their construction zones?
         $recallable_dice = $this->dice->countCardInLocation( 'worldconstruct', $player_id )
@@ -1438,10 +1436,7 @@ class RollForTheGalaxy extends Bga\GameFramework\Table
         }
 
         if( $recallable_dice > 0 )
-        {
-            self::giveExtraTime( $player_id );
-            return;
-        }
+            return false; // Has dice they could recall
 
         // If we auto skip management, we need to also reset credit to 1 if needed (same as manageDone)
         if( $current_credit == 0 )
@@ -1455,6 +1450,7 @@ class RollForTheGalaxy extends Bga\GameFramework\Table
 
         // Auto-skip this player
         $this->gamestate->setPlayerNonMultiactive( $player_id, "no_more_actions" );
+        return true;
     }
 
     function doRecruit( $player_id, $die_id )
@@ -3734,7 +3730,10 @@ class RollForTheGalaxy extends Bga\GameFramework\Table
         foreach( $players as $player_id => $dummy )
         {
             $this->autorecruit( $player_id, $bForceAutorecruit );
-            $this->tryAutoSkipManage( $player_id );
+            if( ! $this->tryAutoSkipManage( $player_id ) )
+            {
+                self::giveExtraTime( $player_id );
+            }
         }
     }
 

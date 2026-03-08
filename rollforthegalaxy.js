@@ -924,28 +924,13 @@ function (dojo, declare) {
             var category = parts[1];
             var tile_id = parts[3];
 
-            try {
-                if( category == 'dev' )
-                {
-                    dojo.removeClass( 'scout_world_item_'+tile_id, 'to_be_removed' );
-                }
-                else
-                {
-                    dojo.removeClass( 'scout_dev_item_'+tile_id, 'to_be_removed' );
-                }
-            } catch (error) {
-                if (error instanceof TypeError) {
-                    // do nothing
-                    //
-                    // the following error occured: "null is not an object
-                    // (evaluating 't[o]')"
-                    //
-                    // this probably happens under specific timing
-                    // circumstances when a scouted card is selected for the
-                    // construction zone and the back side no longer exists
-                } else {
-                    throw e;
-                }
+            if( category == 'dev' )
+            {
+                dojo.query( '#scout_world_item_' + tile_id ).removeClass( 'to_be_removed' );
+            }
+            else
+            {
+                dojo.query( '#scout_dev_item_' + tile_id ).removeClass( 'to_be_removed' );
             }
         },
 

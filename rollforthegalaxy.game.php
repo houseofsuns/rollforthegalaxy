@@ -287,7 +287,7 @@ class RollForTheGalaxy extends Bga\GameFramework\Table
             $gain = $this->tiles_types[ $tile['type'] ]['cost'];
             $player_id = $tile['location_arg'];
 
-            $this->bga->playerScore->inc($player_id, $gain);
+            self::DbQuery( "UPDATE player SET player_score=player_score+$gain WHERE player_id='$player_id'" );
         }
 
         self::notifyAllPlayers( 'initialScores', '', array(
@@ -1716,8 +1716,7 @@ class RollForTheGalaxy extends Bga\GameFramework\Table
 
                 // +1 VP chip
                 $gain = 1;
-                self::DbQuery( "UPDATE player SET player_vp_chip=player_vp_chip+$gain WHERE player_id='$player_id'" );
-                $this->bga->playerScore->inc($player_id, $gain);
+                self::DbQuery( "UPDATE player SET player_vp_chip=player_vp_chip+$gain, player_score=player_score+$gain WHERE player_id='$player_id'" );
 
                 self::incGameStateValue( 'vp_stock', - $gain );
 
@@ -1741,8 +1740,7 @@ class RollForTheGalaxy extends Bga\GameFramework\Table
 
             self::incGameStateValue( 'vp_stock', - $gain );
 
-            self::DbQuery( "UPDATE player SET player_vp_chip=player_vp_chip+$gain WHERE player_id='$player_id'" );
-            $this->bga->playerScore->inc($player_id, $gain);
+            self::DbQuery( "UPDATE player SET player_vp_chip=player_vp_chip+$gain, player_score=player_score+$gain WHERE player_id='$player_id'" );
 
             $new_score = self::getObjectFromDB( "SELECT player_score, player_vp_chip FROM player WHERE player_id='$player_id'" );
 
@@ -2939,7 +2937,7 @@ class RollForTheGalaxy extends Bga\GameFramework\Table
 
         // Score
         $gain = $this->tiles_types[ $card_to_build['type'] ]['cost'];
-        $this->bga->playerScore->inc($player_id, $gain);
+        self::DbQuery( "UPDATE player SET player_score=player_score+$gain WHERE player_id='$player_id'" );
 
         $new_score = self::getObjectFromDB( "SELECT player_score, player_vp_chip FROM player WHERE player_id='$player_id'" );
 
@@ -3599,8 +3597,7 @@ class RollForTheGalaxy extends Bga\GameFramework\Table
 
                     self::incGameStateValue( 'vp_stock', - $gain );
 
-                    self::DbQuery( "UPDATE player SET player_vp_chip=player_vp_chip+$gain WHERE player_id='$player_id'" );
-                    $this->bga->playerScore->inc($player_id, $gain);
+                    self::DbQuery( "UPDATE player SET player_vp_chip=player_vp_chip+$gain, player_score=player_score+$gain WHERE player_id='$player_id'" );
 
                     $new_score = self::getObjectFromDB( "SELECT player_score, player_vp_chip FROM player WHERE player_id='$player_id'" );
 
@@ -3774,7 +3771,7 @@ class RollForTheGalaxy extends Bga\GameFramework\Table
     {
         $players = self::loadPlayersBasicInfos();
 
-        $this->bga->playerScore->inc($player_id, $score);
+        self::DbQuery( "UPDATE player SET player_score=player_score+$score WHERE player_id='$player_id'" );
 
         self::notifyAllPlayers( 'score', clienttranslate('${card_name}: ${player_name} scores ${score} VP.'), array(
             'i18n' => array( 'card_name' ),
@@ -4057,7 +4054,6 @@ class RollForTheGalaxy extends Bga\GameFramework\Table
         // Compute score_aux (credits + dice in cup)
         $players = self::loadPlayersBasicInfos();
         $dice_cup = $this->dice->countCardsByLocationArgs( 'cup' );
-        $credits = self::getCollectionFromDB( "SELECT player_id, player_credit FROM player" );
 
         foreach( $players as $player_id => $dummy )
         {
@@ -4065,8 +4061,7 @@ class RollForTheGalaxy extends Bga\GameFramework\Table
             if( isset( $dice_cup[ $player_id ] ) )
                 $cup = $dice_cup[ $player_id ];
 
-            $this->bga->playerScoreAux->set(
-                $player_id, $credits[$player_id]['player_credit'] + $cup);
+            self::DbQuery( "UPDATE player SET player_score_aux = player_credit + $cup WHERE player_id='$player_id'" );
         }
 
         foreach( $player_to_points as $player_id => $score )

@@ -703,8 +703,9 @@ function (dojo, declare) {
 
         hasAdvancedLogistics: function( player_id )
         {
-            for (const val of Object.values(this.gamedatas.tableau)) {
-                if (val.type == "32" && val.location_arg == player_id) {
+            // do not use this.gamedatas.tableau as it is not updated during the game
+            for (const val of this.playerTableau[ player_id ].items) {
+                if (val.type == "32") {
                     return true;
                 }
             }

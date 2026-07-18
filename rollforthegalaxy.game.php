@@ -1343,6 +1343,16 @@ class RollForTheGalaxy extends Bga\GameFramework\Table
                 throw new SystemException( "This die is not in your construction zone" );
         }
 
+        // We can never save more dice than the cost of the tile being built: only
+        // that many dice are actually being spent on this construction. Any extra
+        // dice sitting in the construction zone (carried over from a previous
+        // round) are not part of this cost and must remain there for the next tile.
+        $tile = $this->tiles->getCard( self::getGameStateValue( 'current_effect_card' ) );
+        $cost = self::getCostFor( ( $zone == 'dev' ) ? 2 : 3, $player_id, $tile['type'] );
+
+        if( self::getGameStateValue( 'saved_dice_nbr' ) >= $cost )
+            throw new SystemException( "You cannot save more dice than the cost of this tile" );
+
         // Place die on cup
         $this->dice->moveCard( $die_id, 'cup', $player_id );
 
@@ -1358,7 +1368,10 @@ class RollForTheGalaxy extends Bga\GameFramework\Table
             'card_name' => $this->tiles_types[ 102 ]['name']
         ) );
 
-        $this->gamestate->nextState( 'continue' );
+        if( self::getGameStateValue( 'saved_dice_nbr' ) >= $cost )
+            $this->gamestate->nextState( 'costcovered' ); // Cost is fully covered: skip the second save prompt
+        else
+            $this->gamestate->nextState( 'continue' );
     }
 
     function autorecruit( $player_id, $bForce=false )

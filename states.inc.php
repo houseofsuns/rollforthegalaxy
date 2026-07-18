@@ -319,7 +319,7 @@ $machinestates = array(
     		"type" => "activeplayer",
     		"args" => "argCurrentEffect",
     		"possibleactions" => array( "savedie", "donotuse" ),
-    		"transitions" => array( "donotuse" => 1000, "continue" => 1003,  "zombiePass" => 1000 )
+    		"transitions" => array( "donotuse" => 1000, "continue" => 1003, "costcovered" => 1000,  "zombiePass" => 1000 )
     ),
     1003 => array(
     		"name" => "savedie",
@@ -328,7 +328,7 @@ $machinestates = array(
     		"type" => "activeplayer",
     		"args" => "argCurrentEffect",
     		"possibleactions" => array( "savedie", "donotuse" ),
-    		"transitions" => array( "donotuse" => 1000, "continue" => 1000,  "zombiePass" => 1000 )
+    		"transitions" => array( "donotuse" => 1000, "continue" => 1000, "costcovered" => 1000,  "zombiePass" => 1000 )
     ),
     1004 => array(
     		"name" => "savedie",
@@ -337,7 +337,7 @@ $machinestates = array(
     		"type" => "activeplayer",
     		"args" => "argCurrentEffect",
     		"possibleactions" => array( "savedie", "donotuse" ),
-    		"transitions" => array( "donotuse" => 1000, "continue" => 1005,  "zombiePass" => 1000 )
+    		"transitions" => array( "donotuse" => 1000, "continue" => 1005, "costcovered" => 1000,  "zombiePass" => 1000 )
     ),
     1005 => array(
     		"name" => "savedie",
@@ -346,7 +346,7 @@ $machinestates = array(
     		"type" => "activeplayer",
     		"args" => "argCurrentEffect",
     		"possibleactions" => array( "savedie", "donotuse" ),
-    		"transitions" => array( "donotuse" => 1000, "continue" => 1000,  "zombiePass" => 1000 )
+    		"transitions" => array( "donotuse" => 1000, "continue" => 1000, "costcovered" => 1000,  "zombiePass" => 1000 )
     ),
 
 

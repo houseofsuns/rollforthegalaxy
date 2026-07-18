@@ -4266,4 +4266,29 @@ class RollForTheGalaxy extends Bga\GameFramework\Table
 
         self::applyEffect( self::getCurrentPlayerId(), $card['type'], $card_id );
     }
+
+    function debug_gain_dice(int $num)
+    {
+        $players = self::loadPlayersBasicInfos();
+        $player_id = self::getCurrentPlayerId();
+        $nbr = $num;
+        $die_type = 7; // Alien
+        $target = 'cup';
+        for( $i=0;$i<$nbr;$i++ )
+        {
+            // Take the die a place it on target
+            $die = $this->dice->pickCardForLocation( 'deck'.$die_type, $target, $player_id );
+            self::notifyAllPlayers( "newdie", clienttranslate('Deus ex machina: ${player_name} takes a ${die_name} die.'), array(
+                'i18n' => array( 'die_name' ),
+                'card_name' => 'none',
+                'player_name' => $players[ $player_id ]['player_name'],
+                'player_id' => $player_id,
+                'die_name' => $this->dice_types[ $die_type ]['name'],
+                'die' => $die,
+                'target' => $target,
+                'tile_id' => null,
+            ) );
+        }
+        self::incStat( $nbr, 'dice_number', $player_id );
+    }
 }

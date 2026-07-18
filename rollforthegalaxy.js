@@ -2979,11 +2979,19 @@ function (dojo, declare) {
         {
             if( notif.args.target == 'cup' )
             {
-                this.cup[ notif.args.player_id ].addToStockWithId( notif.args.die.type, notif.args.die.id, 'tableau_'+notif.args.player_id+'_item_'+notif.args.tile_id );
+                from = undefined;
+                if ( notif.args.tile_id != null) {
+                    from = 'tableau_'+notif.args.player_id+'_item_'+notif.args.tile_id;
+                }
+                this.cup[ notif.args.player_id ].addToStockWithId( notif.args.die.type, notif.args.die.id, from );
             }
             else if( notif.args.target == 'citizenry' )
             {
-                this.citizenry[ notif.args.player_id ].addToStockWithId( notif.args.die.type, notif.args.die.id, 'tableau_'+notif.args.player_id+'_item_'+notif.args.tile_id );
+                from = undefined;
+                if ( notif.args.tile_id != null) {
+                    from = 'tableau_'+notif.args.player_id+'_item_'+notif.args.tile_id;
+                }
+                this.citizenry[ notif.args.player_id ].addToStockWithId( notif.args.die.type, notif.args.die.id, from );
             }
         },
 
